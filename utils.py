@@ -10,8 +10,8 @@ from torch.utils.data import Dataset
 
 
 
-def embeddings_from_tweet(tweets, device):
-    client = OpenAI(api_key="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")
+def embeddings_from_tweet(tweets, device, token):
+    client = OpenAI(api_key=token)
     response = client.embeddings.create(
         input=tweets,
         model="text-embedding-3-large"
@@ -237,11 +237,11 @@ def predict_from_embedding(indices , embs , labels, labels_num_classes, hidden_d
     return all_predictions
 
 
-def predict_from_tweet(tweets, labels_num_classes, hidden_dim, embeddings_dim, device):
+def predict_from_tweet(tweets, labels_num_classes, hidden_dim, embeddings_dim, device, token):
     all_predictions = {}
     for label, num_classes in labels_num_classes:
         print(f'Predicting {label}')
-        x  = embeddings_from_tweet(tweets, device)
+        x  = embeddings_from_tweet(tweets, device, token)
         split_num = 0
         ckpt_path = f'./models/best_multiclass_{label}_split_{split_num}.pth'
         model = TweetClassiferMultiClass(embeddings_dim, num_classes, hidden_dim=hidden_dim).to(device)
