@@ -160,7 +160,6 @@ def overall_classification():
     st.markdown('---')
 
 
-
 def tweet_classifier():
     device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
     # device = torch.device("cpu")
@@ -185,7 +184,7 @@ def tweet_classifier():
         s = predict_from_embedding([tweet_index] , embs , Y, labels_num_classes, hidden_dim, embeddings_dim, device)
     else:
         tweet = st.text_area('Enter your tweet', value='Stop the war')
-        s = predict_from_tweet([tweet], labels_num_classes, hidden_dim, embeddings_dim, device)
+        s = predict_from_tweet([tweet], labels_num_classes, hidden_dim, embeddings_dim, device, st.secrets['openai_token'])
     unmerge_check = st.checkbox('Unmerge', value=False)
     if not unmerge_check:
         data = pd.DataFrame({'key': [], 'ground_truth': [], 'predictions': [], 'probs': []})
