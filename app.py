@@ -150,7 +150,7 @@ def overall_classification():
 
     classified_tweets = pd.read_parquet('./data/combined_reports_with_preds_final.parquet')
     data = classified_tweets[cols]
-    with st.expander('Show all classified tweets'):
+    with st.expander('Show all classified tweets:'):
         classification_results(data)
     
 
