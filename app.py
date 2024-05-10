@@ -236,8 +236,9 @@ def tweet_classifier():
                 data_unmerged = pd.concat([data_unmerged, row])
         data_unmerged = data_unmerged.reset_index(drop=True)
         data_unmerged['is_correct'] = data_unmerged['ground_truth'] == data_unmerged['predictions']
+        data_unmerged['postive_prediciton'] = ['Positive' if x == 1 else 'Negative' for x in data_unmerged['predictions']]
         fig, ax = plt.subplots(figsize=(20, 5))
-        sns.barplot(data=data_unmerged, x='key', y='probs', hue='is_correct', ax=ax, palette=color_map)
+        sns.barplot(data=data_unmerged, x='key', y='probs', hue='postive_prediciton', ax=ax, palette={'Positive': 'green', 'Negative': 'red'})
         st.pyplot(fig)
         st.write(data_unmerged)
 
