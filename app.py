@@ -163,6 +163,7 @@ def overall_classification():
 
 def tweet_classifier():
     device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    # device = torch.device("cpu")
     openai_embs = pd.read_parquet('./embeddings/labelled_embeddings.parquet')
     df = read_labelled_data(process_nan=True, process_news=True, process_not_sudan=True)
     df = merge_into_multicalss(df)
