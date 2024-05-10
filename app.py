@@ -185,7 +185,7 @@ def tweet_classifier():
     else:
         tweet = st.text_area('Enter your tweet', value='Stop the war')
         s = predict_from_tweet([tweet], labels_num_classes, hidden_dim, embeddings_dim, device, st.secrets['openai_token'])
-    unmerge_check = st.checkbox('Unmerge', value=False)
+    unmerge_check = st.checkbox('Unmerge', value=tweet_src=='user')
     if not unmerge_check:
         data = pd.DataFrame({'key': [], 'ground_truth': [], 'predictions': [], 'probs': []})
         color_map = {True: 'green', False: 'red'}
@@ -224,12 +224,14 @@ def tweet_classifier():
                 pro_gt = 1 if gt == 1 else 0
                 pro_preds = 1 if pred == 1 else 0
                 pro_probs = prob if pred == 1 else 1-prob
+                pro_probs = pro_probs if pred != 2 else 0
                 row = pd.DataFrame({'key': [pro_label], 'ground_truth': [pro_gt], 'predictions': [pro_preds], 'probs': [pro_probs]})
                 data_unmerged = pd.concat([data_unmerged, row])
                 anti_label = f'anti {label}'
                 anti_gt = 1 if gt == 0 else 0
                 anti_preds = 1 if pred == 0 else 0
                 anti_probs = prob if pred == 0 else 1-prob
+                anti_probs = anti_probs if pred != 2 else 0
                 row = pd.DataFrame({'key': [anti_label], 'ground_truth': [anti_gt], 'predictions': [anti_preds], 'probs': [anti_probs]})
                 data_unmerged = pd.concat([data_unmerged, row])
         data_unmerged = data_unmerged.reset_index(drop=True)
