@@ -156,7 +156,14 @@ logs/
 reports/
 docs/
 data/combined_reports.csv
-# embeddings/
-# models/
+embeddings/
+models/
 scores/
 splits/
+data/
+.streamlit/
+*.joblib
+*.xlsx
+*.ipynb
+*.csv
+*.logs
