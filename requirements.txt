@@ -8,3 +8,4 @@ argparse
 datasets
 matplotlib
 transformers
+scikit-learn
