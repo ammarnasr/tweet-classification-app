@@ -157,6 +157,6 @@ reports/
 docs/
 data/combined_reports.csv
 embeddings/
-models/
+# models/
 scores/
 splits/
