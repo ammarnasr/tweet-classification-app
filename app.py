@@ -154,12 +154,14 @@ def tweet_classifier():
     openai_embs = pd.read_parquet('./embeddings/labelled_embeddings.parquet')
     df = read_labelled_data(process_nan=True, process_news=True, process_not_sudan=True)
     df = merge_into_multicalss(df)
-    labels = ['RSF','SAF','peace','war','civilians','no polarisation','Geopolticis']
+    labels = ['RSF','SAF','peace','war','no polarisation','Geopolticis', 'pro civilian', 'anti civilians',
+            'Sudanese', 'Not Sudanese', 'Likely bot', 'Likely not a bot', 'Not about Sudan']
     X, Y, codes = get_xy(df, tweets_col='post', labels_cols=labels)
     embs = get_tweets_embeddings(codes, openai_embs, device)
     embeddings_dim = embs.shape[1]
     hidden_dim = 4096
-    labels_num_classes = [('RSF', 3), ('SAF', 3), ('peace', 3), ('war', 3), ('civilians', 3), ('no polarisation', 2), ('Geopolticis', 2)]
+    labels_num_classes = [('RSF', 3), ('SAF', 3), ('peace', 3), ('war', 3), ('no polarisation', 2), ('Geopolticis', 2), ('pro civilian', 2), ('anti civilians', 2),
+                        ('Sudanese', 2), ('Not Sudanese', 2), ('Likely bot', 2), ('Likely not a bot', 2), ('Not about Sudan', 2)]
     tweet_src = st.radio('Choose a source for tweets', ['data', 'user'], index=0)
     st.write(f'Classifying tweets using tweets from {tweet_src}')
     if tweet_src == 'data':
