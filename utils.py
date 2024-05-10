@@ -245,7 +245,7 @@ def predict_from_tweet(tweets, labels_num_classes, hidden_dim, embeddings_dim, d
         split_num = 0
         ckpt_path = f'./models/best_multiclass_{label}_split_{split_num}.pth'
         model = TweetClassiferMultiClass(embeddings_dim, num_classes, hidden_dim=hidden_dim).to(device)
-        model.load_state_dict(torch.load(ckpt_path))
+        model.load_state_dict(torch.load(ckpt_path, map_location=device))
         x= torch.tensor(x, dtype=torch.float32, device=device)
         y_pred = model(x)['probs']
         predictions = y_pred.detach().cpu()
