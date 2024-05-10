@@ -1,4 +1,5 @@
 import torch
+import io
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -104,7 +105,7 @@ def classification_results(data):
 
 @st.cache_data
 def convert_df(df):
-    return df.to_csv().encode("utf-8")
+    return df.to_csv().encode("utf-8-sig")
 
 
 def overall_classification():
@@ -116,15 +117,26 @@ def overall_classification():
     with st.sidebar:
         data_type = 'Relevant' if only_relevant else 'All'
         st.write(f'Downloaded {data_type} classified tweets')
-        csv = convert_df(classified_tweets)
-        st.download_button(
-            label="Download data as CSV",
-            data=csv,
-            file_name=f"classified_tweets_{data_type}.csv",
-            mime="text/csv",
-            type='primary',
-            use_container_width=True
-        )
+        # csv = convert_df(classified_tweets)
+        # st.download_button(
+        #     label="Download data as CSV",
+        #     data=csv,
+        #     file_name=f"classified_tweets_{data_type}.csv",
+        #     mime="text/csv",
+        #     type='primary',
+        #     use_container_width=True
+        # )
+        # buffer = io.BytesIO()
+        # # download button 2 to download dataframe as xlsx
+        # with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+        #     # Write each dataframe to a different worksheet.
+        #     classified_tweets.to_excel(writer, sheet_name='Sheet1', index=False)
+        #     download2 = st.download_button(
+        #         label="Download data as Excel",
+        #         data=buffer,
+        #         file_name='large_df.xlsx',
+        #         mime='application/vnd.ms-excel'
+            # )
     stratified_scores = pd.read_csv('./stratified_scores.csv')
     st.markdown('<h3>Stratified Scores</h3>', unsafe_allow_html=True)
     st.write(stratified_scores)
