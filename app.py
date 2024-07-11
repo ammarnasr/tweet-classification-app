@@ -107,6 +107,14 @@ def classification_results(data):
 def convert_df(df):
     return df.to_csv().encode("utf-8-sig")
 
+@st.cache_data
+def to_excel(df):
+    output = io.BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    df.to_excel(writer, index=False, sheet_name='Sheet1')
+    writer.close()
+    processed_data = output.getvalue()
+    return processed_data
 
 def overall_classification():
     only_relevant = st.sidebar.checkbox('Use only relevant tweets', value=False)
@@ -117,15 +125,19 @@ def overall_classification():
     with st.sidebar:
         data_type = 'Relevant' if only_relevant else 'All'
         st.write(f'Downloaded {data_type} classified tweets')
-        # csv = convert_df(classified_tweets)
-        # st.download_button(
-        #     label="Download data as CSV",
-        #     data=csv,
-        #     file_name=f"classified_tweets_{data_type}.csv",
-        #     mime="text/csv",
-        #     type='primary',
-        #     use_container_width=True
-        # )
+        # st.write(f'Downloade Code: {st.secrets["download_code"]}')
+        entered_code = st.text_input('Enter the download code ')
+        st.info('Data access is handled on a case by case basis, to request access please email: info@clingendael.org')
+        if entered_code == st.secrets['download_code']:
+            st.success('Code is correct')        
+            excel_data = to_excel(classified_tweets)
+            st.download_button(label='Download Excel file',
+                            data=excel_data,
+                            file_name=f'labelled_tweets_{data_type}.xlsx',
+                            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        else:
+            st.warning('Code is incorrect')
+
         # buffer = io.BytesIO()
         # # download button 2 to download dataframe as xlsx
         # with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
@@ -175,9 +187,9 @@ def tweet_classifier():
     labels_num_classes = [('RSF', 3), ('SAF', 3), ('peace', 3), ('war', 3), ('no polarisation', 2), ('Geopolticis', 2), ('pro civilian', 2), ('anti civilians', 2),
                         ('Sudanese', 2), ('Not Sudanese', 2), ('Likely bot', 2), ('Likely not a bot', 2), ('Not about Sudan', 2)]
     tweet_src = st.radio('Choose a source for tweets', ['data', 'user'], index=0)
-    st.write(f'Classifying tweets using tweets from {tweet_src}')
+    st.write(f'Classifying demo using tweets from {tweet_src}')
     if tweet_src == 'data':
-        st.write(df[['post', 'RSF', 'SAF', 'peace', 'war', 'civilians', 'no polarisation', 'Geopolticis']])
+        st.write(df[['post', 'RSF', 'SAF', 'peace', 'war', 'civilians', 'no polarisation', 'Geopolticis']].head(15))
         tweet_index = st.number_input('Choose a tweet', 0, len(df)-1, 0)
         tweet = df.loc[tweet_index, 'post']
         st.write(tweet)
