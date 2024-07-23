@@ -128,7 +128,7 @@ def overall_classification():
         # st.write(f'Downloade Code: {st.secrets["download_code"]}')
         entered_code = st.text_input('Enter the download code ')
         st.info('Data access is handled on a case by case basis, to request access please email: info@clingendael.org')
-        if entered_code == st.secrets['download_code']:
+        if entered_code == "CLINGENDAEL_SUDAN":
             st.success('Code is correct')        
             excel_data = to_excel(classified_tweets)
             st.download_button(label='Download Excel file',
